@@ -79,7 +79,7 @@ export default function CadastroAdm1() {
                     confirmar_senha: confirmarSenha,
                     telefone: telefone,
                     email: email,
-                    tipo: 3 // Ajuste este número para o ID correto do tipo Administrador na sua API
+                    tipo: 0
                 })
             });
 
