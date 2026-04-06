@@ -7,7 +7,7 @@ import Input from "../Input/Input.jsx";
 import Botao from "../Botao/Botao.jsx";
 import Mensagem from "../Mensagem/Mensagem.jsx";
 
-const API_URL = 'http://10.92.3.128:5000';
+const API_URL = 'http://10.92.3.127:5000';
 
 export default function CadastroDoador1() {
     const navigate = useNavigate();
@@ -15,7 +15,6 @@ export default function CadastroDoador1() {
     const [loading, setLoading] = useState(false);
     const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
-    // Estados para cada campo
     const [nome, setNome] = useState('');
     const [senha, setSenha] = useState('');
     const [telefone, setTelefone] = useState('');
@@ -28,7 +27,6 @@ export default function CadastroDoador1() {
         setIsOng(value);
     };
 
-    // Função para converter arquivo para Base64
     const fileToBase64 = (file) => {
         return new Promise((resolve, reject) => {
             const reader = new FileReader();
@@ -39,7 +37,6 @@ export default function CadastroDoador1() {
     };
 
     async function realizarCadastro() {
-        // Validações
         if (!nome) {
             setMensagem({ tipo: 'erro', texto: 'Preencha o campo Nome!' });
             return;
@@ -48,12 +45,24 @@ export default function CadastroDoador1() {
             setMensagem({ tipo: 'erro', texto: 'Preencha o campo CPF!' });
             return;
         }
+        if (cpf.length !== 11) {
+            setMensagem({ tipo: 'erro', texto: 'CPF deve ter 11 dígitos!' });
+            return;
+        }
         if (!senha) {
             setMensagem({ tipo: 'erro', texto: 'Preencha o campo Senha!' });
             return;
         }
         if (!confirmarSenha) {
             setMensagem({ tipo: 'erro', texto: 'Preencha o campo Confirmar senha!' });
+            return;
+        }
+        if (senha !== confirmarSenha) {
+            setMensagem({ tipo: 'erro', texto: 'Senhas não conferem!' });
+            return;
+        }
+        if (senha.length < 8) {
+            setMensagem({ tipo: 'erro', texto: 'A senha deve ter pelo menos 8 caracteres!' });
             return;
         }
         if (!telefone) {
@@ -69,21 +78,6 @@ export default function CadastroDoador1() {
             return;
         }
 
-        if (senha !== confirmarSenha) {
-            setMensagem({ tipo: 'erro', texto: 'Senhas não conferem!' });
-            return;
-        }
-
-        if (cpf.length !== 11) {
-            setMensagem({ tipo: 'erro', texto: 'CPF deve ter 11 dígitos!' });
-            return;
-        }
-
-        if (senha.length < 8) {
-            setMensagem({ tipo: 'erro', texto: 'A senha deve ter pelo menos 8 caracteres!' });
-            return;
-        }
-
         setLoading(true);
         setMensagem({ tipo: '', texto: '' });
 
@@ -92,9 +86,7 @@ export default function CadastroDoador1() {
 
             const retorno = await fetch(`${API_URL}/criar_usuarios`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     nome: nome,
                     cpf_cnpj: cpf,
@@ -112,9 +104,7 @@ export default function CadastroDoador1() {
             if (retorno.ok) {
                 localStorage.setItem('emailConfirmacao', email);
                 setMensagem({ tipo: 'sucesso', texto: 'Cadastro realizado com sucesso!' });
-                setTimeout(() => {
-                    navigate('/confirmarEmail');
-                }, 2000);
+                setTimeout(() => navigate('/confirmarEmail'), 2000);
             } else {
                 setMensagem({ tipo: 'erro', texto: data.error || data.mensagem || 'Erro ao realizar cadastro!' });
             }
@@ -128,89 +118,27 @@ export default function CadastroDoador1() {
 
     return (
         <section className={css.containerSection}>
-            <Mensagem
-                tipo={mensagem.tipo}
-                texto={mensagem.texto}
-                onClose={() => setMensagem({ tipo: '', texto: '' })}
-            />
-
+            <Mensagem tipo={mensagem.tipo} texto={mensagem.texto} onClose={() => setMensagem({ tipo: '', texto: '' })} />
             <div className={css.organizar}>
                 <Titulo titulo={'Venha fazer parte da mudança!'} cor={'rosa'} />
                 <BotaoAlternar ong={isOng} setOng={handleToggleOng} />
             </div>
-
             <div className={css.formulario}>
                 <div className={css.linha}>
                     <div className={css.campos}>
-                        <Input
-                            label={'Nome'}
-                            type={'text'}
-                            placeholder={'Digite seu nome'}
-                            required={true}
-                            input={nome}
-                            alterarInput={(e) => setNome(e.target.value)}
-                        />
-                        <Input
-                            label={'Senha'}
-                            type={'password'}
-                            placeholder={'Digite sua senha'}
-                            required={true}
-                            input={senha}
-                            alterarInput={(e) => setSenha(e.target.value)}
-                        />
-                        <Input
-                            label={'Telefone'}
-                            type={'text'}
-                            placeholder={'Digite seu telefone'}
-                            required={true}
-                            maxLength={11}
-                            soNumeros={true}
-                            input={telefone}
-                            alterarInput={(e) => setTelefone(e.target.value)}
-                        />
-                        <Input
-                            label={'Email'}
-                            type={'email'}
-                            placeholder={'Digite seu email'}
-                            required={true}
-                            input={email}
-                            alterarInput={(e) => setEmail(e.target.value)}
-                        />
+                        <Input label={'Nome'} type={'text'} placeholder={'Digite seu nome'} required={true} input={nome} alterarInput={(e) => setNome(e.target.value)} />
+                        <Input label={'Senha'} type={'password'} placeholder={'Digite sua senha'} required={true} input={senha} alterarInput={(e) => setSenha(e.target.value)} />
+                        <Input label={'Telefone'} type={'text'} placeholder={'Digite seu telefone'} required={true} maxLength={11} soNumeros={true} input={telefone} alterarInput={(e) => setTelefone(e.target.value)} />
+                        <Input label={'Email'} type={'email'} placeholder={'Digite seu email'} required={true} input={email} alterarInput={(e) => setEmail(e.target.value)} />
                     </div>
                     <div className={css.campos}>
-                        <Input
-                            label={'CPF'}
-                            type={'text'}
-                            placeholder={'Digite seu CPF'}
-                            required={true}
-                            maxLength={11}
-                            soNumeros={true}
-                            input={cpf}
-                            alterarInput={(e) => setCpf(e.target.value)}
-                        />
-                        <Input
-                            label={'Confirmar senha'}
-                            type={'password'}
-                            placeholder={'Confirme sua senha'}
-                            required={true}
-                            input={confirmarSenha}
-                            alterarInput={(e) => setConfirmarSenha(e.target.value)}
-                        />
-                        <Input
-                            label={'Foto de perfil'}
-                            type={'file'}
-                            tamanho={'Big'}
-                            required={true}
-                            alterarInput={(e) => setFotoPerfil(e.target.files[0])}
-                        />
+                        <Input label={'CPF'} type={'text'} placeholder={'Digite seu CPF'} required={true} maxLength={11} soNumeros={true} input={cpf} alterarInput={(e) => setCpf(e.target.value)} />
+                        <Input label={'Confirmar senha'} type={'password'} placeholder={'Confirme sua senha'} required={true} input={confirmarSenha} alterarInput={(e) => setConfirmarSenha(e.target.value)} />
+                        <Input label={'Foto de perfil'} type={'file'} tamanho={'Big'} required={true} alterarInput={(e) => setFotoPerfil(e.target.files[0])} />
                     </div>
                 </div>
                 <div className={css.botaoContainer}>
-                    <Botao
-                        texto={loading ? 'Cadastrando...' : 'Cadastre-se'}
-                        cor={'rosa'}
-                        acao={realizarCadastro}
-                    />
+                    <Botao texto={loading ? 'Cadastrando...' : 'Cadastre-se'} cor={'rosa'} acao={realizarCadastro} />
                 </div>
             </div>
         </section>
