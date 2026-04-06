@@ -1,0 +1,33 @@
+.padding {
+    padding: 7rem ;
+}
+
+.link {
+    text-decoration: none;
+    color: #9A9A9A;
+    font-size: 1vw;
+    font-weight: 800;
+}
+
+.width {
+    width: 100%;
+}
+
+.p {
+    margin: 0 !important;
+    font-size: 1.2rem;
+}
+
+.imagem {
+    max-width: 40rem;
+    height: 40rem;
+}
+
+@media (max-width: 321px) {
+    .imagem {
+        display: none;
+    }
+    .secao{
+        background-color: #167CBF;
+    }
+}
