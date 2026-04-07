@@ -10,13 +10,10 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 export default function EsqueciSenha() {
     const [email, setEmail] = useState('')
     const [error, setError] = useState('');
-    const [message, setMessage] = useState('')
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-    if (sucesso) {
-        localStorage.removeItem('sucesso');
-    }
+   
 
     function alterarEmail(e) {
         setEmail(e.target.value)
@@ -50,7 +47,10 @@ export default function EsqueciSenha() {
 return (
     <div className={"container-fluid" + css.secao}>
         <div>
-            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
+                localStorage.removeItem('sucesso');
+                setError('');
+            }}/>
             <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
         </div>
         <div className="row">
