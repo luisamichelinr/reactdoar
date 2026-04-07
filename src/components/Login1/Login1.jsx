@@ -67,12 +67,21 @@ export default function Login1() {
         }
     }
 
+    const fecharMensagemSucesso = () => {
+        localStorage.removeItem('sucesso');
+        setSucesso(null);
+    }
+
+    const fecharMensagemErro = () => {
+        setError('');
+    }
+
 
     return (
         <div className={"container-fluid " + css.secao}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
-                <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={fecharMensagemSucesso}/>
+                <Mensagem tipo={"erro"} texto={error} onClose={fecharMensagemErro}/>
             </div>
             <div className="row g-0">
                 <div className={"col-md-6 col-md-6 " + css.colunaFormulario}>
