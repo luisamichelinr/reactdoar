@@ -15,9 +15,7 @@ export default function ConfirmarEmail1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-    if (sucesso) {
-        localStorage.removeItem('sucesso');
-    }
+    
 
     function alterarCodigo(e) {
         let valor = e.currentTarget.value
@@ -51,7 +49,10 @@ export default function ConfirmarEmail1() {
     return (
         <div className={"container-fluid " + css.secao}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
+                    localStorage.removeItem('sucesso');
+                    setError('');
+                }}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
 
