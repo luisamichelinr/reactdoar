@@ -28,9 +28,6 @@ export default function CadastroOng1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-    if (sucesso) {
-        localStorage.removeItem('sucesso');
-    }
 
     function alterarNome(e) {
         setNome(e.target.value)
@@ -148,7 +145,10 @@ export default function CadastroOng1() {
     return(
         <section className={css.containerSection}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
+                    localStorage.removeItem('sucesso');
+                    setError('');
+                }}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.cadastroOng1}>
