@@ -14,7 +14,6 @@ export default function Input({input, alterarInput, tamanho = 'normal', label, t
                 placeholder={placeholder}
                 maxLength={maxLength}
                 minLength={minLength}
-                inputMode={soNumeros ? 'numeric' : undefined}
             />
         </div>
     )

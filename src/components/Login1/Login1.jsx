@@ -24,7 +24,7 @@ export default function Login1() {
     }
 
     async function realizarLogin() {
-        let retorno = await fetch('http://10.92.3.127:5000/login', {
+        let retorno = await fetch('http://192.168.18.157:5000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

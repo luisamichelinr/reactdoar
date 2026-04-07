@@ -1,144 +1,97 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import css from './CadastroDoador1.module.css';
+import css from './CadastroDoador1.module.css'
 import Titulo from "../Titulo/Titulo.jsx";
 import BotaoAlternar from "../BotaoAlternar/BotaoAlternar.jsx";
 import Input from "../Input/Input.jsx";
 import Botao from "../Botao/Botao.jsx";
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
 import Mensagem from "../Mensagem/Mensagem.jsx";
 
-const API_URL = 'http://10.92.3.128:5000';
-
 export default function CadastroDoador1() {
+    const [nome, setNome] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [telefone, setTelefone] = useState('')
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
+    const [confirmarSenha, setConfirmarSenha] = useState('')
+    const [fotoPerfil, setFotoPerfil] = useState('')
+    const [error, setError] = useState('')
     const navigate = useNavigate();
-    const [isOng, setIsOng] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
-    // Estados para cada campo
-    const [nome, setNome] = useState('');
-    const [senha, setSenha] = useState('');
-    const [telefone, setTelefone] = useState('');
-    const [email, setEmail] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState('');
-    const [fotoPerfil, setFotoPerfil] = useState(null);
+    function alterarNome(e) {
+        setNome(e.target.value)
+    }
 
-    const handleToggleOng = (value) => {
-        setIsOng(value);
-    };
+    function alterarCPF(e) {
+        let valor = e.currentTarget.value
+        valor = valor.replace(/\D/g, '')
 
-    // Função para converter arquivo para Base64
-    const fileToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = (error) => reject(error);
-        });
-    };
+        setCpf(valor)
+    }
 
-    async function realizarCadastro() {
-        // Validações
-        if (!nome) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Nome!' });
-            return;
-        }
-        if (!cpf) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo CPF!' });
-            return;
-        }
-        if (!senha) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Senha!' });
-            return;
-        }
-        if (!confirmarSenha) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Confirmar senha!' });
-            return;
-        }
-        if (!telefone) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Telefone!' });
-            return;
-        }
-        if (!email) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Email!' });
-            return;
-        }
-        if (!fotoPerfil) {
-            setMensagem({ tipo: 'erro', texto: 'Selecione uma foto de perfil!' });
-            return;
-        }
+    function alterarTelefone(e) {
+        let valor = e.currentTarget.value
+        valor = valor.replace(/\D/g, '')
+        setTelefone(valor)
+    }
 
-        if (senha !== confirmarSenha) {
-            setMensagem({ tipo: 'erro', texto: 'Senhas não conferem!' });
-            return;
+    function alterarEmail(e) {
+        setEmail(e.currentTarget.value)
+    }
+
+    function alterarSenha(e) {
+        setSenha(e.target.value)
+    }
+
+    function alterarConfirmarSenha(e) {
+        setConfirmarSenha(e.target.value)
+    }
+
+    function alterarFotoPerfil(e) {
+        setFotoPerfil(e.target.files[0])
+    }
+
+
+
+    async function criarDoador() {
+        const form = new FormData();
+        form.append('nome', nome)
+        form.append('cpf_cnpj', cpf)
+        form.append('telefone', telefone)
+        form.append('email', email)
+        form.append('senha', senha)
+        form.append('confirmar_senha', confirmarSenha)
+        form.append('foto_perfil', fotoPerfil)
+
+        let retorno = await fetch('http://192.168.18.157:5000/criar_usuarios', {
+            method: 'POST',
+            credentials: 'include',
+            body: form
+        })
+
+        retorno = await retorno.json();
+
+
+        if (retorno.message) {
+            navigate('/login')
         }
 
-        if (cpf.length !== 11) {
-            setMensagem({ tipo: 'erro', texto: 'CPF deve ter 11 dígitos!' });
-            return;
-        }
-
-        if (senha.length < 8) {
-            setMensagem({ tipo: 'erro', texto: 'A senha deve ter pelo menos 8 caracteres!' });
-            return;
-        }
-
-        setLoading(true);
-        setMensagem({ tipo: '', texto: '' });
-
-        try {
-            const fotoBase64 = await fileToBase64(fotoPerfil);
-
-            const retorno = await fetch(`${API_URL}/criar_usuarios`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nome: nome,
-                    cpf_cnpj: cpf,
-                    senha: senha,
-                    confirmar_senha: confirmarSenha,
-                    telefone: telefone,
-                    email: email,
-                    tipo: isOng ? 2 : 1,
-                    foto_perfil: fotoBase64
-                })
-            });
-
-            const data = await retorno.json();
-
-            if (retorno.ok) {
-                localStorage.setItem('emailConfirmacao', email);
-                setMensagem({ tipo: 'sucesso', texto: 'Cadastro realizado com sucesso!' });
-                setTimeout(() => {
-                    navigate('/confirmarEmail');
-                }, 2000);
-            } else {
-                setMensagem({ tipo: 'erro', texto: data.error || data.mensagem || 'Erro ao realizar cadastro!' });
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            setMensagem({ tipo: 'erro', texto: 'Erro de conexão com o servidor!' });
-        } finally {
-            setLoading(false);
+        else {
+            setError(retorno.error)
         }
     }
 
+
+
     return (
         <section className={css.containerSection}>
-            <Mensagem
-                tipo={mensagem.tipo}
-                texto={mensagem.texto}
-                onClose={() => setMensagem({ tipo: '', texto: '' })}
-            />
-
+            <div>
+                <Mensagem tipo={"erro"} texto={error} />
+            </div>
             <div className={css.organizar}>
                 <Titulo titulo={'Venha fazer parte da mudança!'} cor={'rosa'} />
-                <BotaoAlternar ong={isOng} setOng={handleToggleOng} />
+                <BotaoAlternar ong={false}/>
             </div>
-
             <div className={css.formulario}>
                 <div className={css.linha}>
                     <div className={css.campos}>
@@ -148,7 +101,7 @@ export default function CadastroDoador1() {
                             placeholder={'Digite seu nome'}
                             required={true}
                             input={nome}
-                            alterarInput={(e) => setNome(e.target.value)}
+                            alterarInput={alterarNome}
                         />
                         <Input
                             label={'Senha'}
@@ -156,7 +109,7 @@ export default function CadastroDoador1() {
                             placeholder={'Digite sua senha'}
                             required={true}
                             input={senha}
-                            alterarInput={(e) => setSenha(e.target.value)}
+                            alterarInput={alterarSenha}
                         />
                         <Input
                             label={'Telefone'}
@@ -164,17 +117,15 @@ export default function CadastroDoador1() {
                             placeholder={'Digite seu telefone'}
                             required={true}
                             maxLength={11}
-                            soNumeros={true}
                             input={telefone}
-                            alterarInput={(e) => setTelefone(e.target.value)}
+                            alterarInput={alterarTelefone}
                         />
                         <Input
                             label={'Email'}
-                            type={'email'}
-                            placeholder={'Digite seu email'}
+                            type={'text'} placeholder={'Digite seu email'}
                             required={true}
                             input={email}
-                            alterarInput={(e) => setEmail(e.target.value)}
+                            alterarInput={alterarEmail}
                         />
                     </div>
                     <div className={css.campos}>
@@ -182,11 +133,9 @@ export default function CadastroDoador1() {
                             label={'CPF'}
                             type={'text'}
                             placeholder={'Digite seu CPF'}
-                            required={true}
-                            maxLength={11}
-                            soNumeros={true}
+                            required={true} maxLength={11}
                             input={cpf}
-                            alterarInput={(e) => setCpf(e.target.value)}
+                            alterarInput={alterarCPF}
                         />
                         <Input
                             label={'Confirmar senha'}
@@ -194,25 +143,21 @@ export default function CadastroDoador1() {
                             placeholder={'Confirme sua senha'}
                             required={true}
                             input={confirmarSenha}
-                            alterarInput={(e) => setConfirmarSenha(e.target.value)}
+                            alterarInput={alterarConfirmarSenha}
                         />
                         <Input
                             label={'Foto de perfil'}
                             type={'file'}
                             tamanho={'Big'}
                             required={true}
-                            alterarInput={(e) => setFotoPerfil(e.target.files[0])}
+                            alterarInput={alterarFotoPerfil}
                         />
                     </div>
                 </div>
                 <div className={css.botaoContainer}>
-                    <Botao
-                        texto={loading ? 'Cadastrando...' : 'Cadastre-se'}
-                        cor={'rosa'}
-                        acao={realizarCadastro}
-                    />
+                    <Botao acao={criarDoador} texto={'Cadastre-se'} cor={'rosa'}/>
                 </div>
             </div>
         </section>
-    );
+    )
 }

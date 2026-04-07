@@ -1,115 +1,85 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import Titulo from "../Titulo/Titulo.jsx";
 import Input from "../Input/Input.jsx";
 import Botao from "../Botao/Botao.jsx";
-import Mensagem from "../Mensagem/Mensagem.jsx";
 import css from "./CadastroAdm1.module.css";
-
-const API_URL = 'http://10.92.3.128:5000';
+import {useState} from "react";
+import {useNavigate} from "react-router-dom";
+import Mensagem from "../Mensagem/Mensagem.jsx";
 
 export default function CadastroAdm1() {
+    const [nome, setNome] = useState('')
+    const [cpf, setCpf] = useState('')
+    const [telefone, setTelefone] = useState('')
+    const [email, setEmail] = useState('')
+    const [senha, setSenha] = useState('')
+    const [confirmarSenha, setConfirmarSenha] = useState('')
+    const [error, setError] = useState('')
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [mensagem, setMensagem] = useState({ tipo: '', texto: '' });
 
-    // Estados para cada campo
-    const [nome, setNome] = useState('');
-    const [cpf, setCpf] = useState('');
-    const [senha, setSenha] = useState('');
-    const [email, setEmail] = useState('');
-    const [telefone, setTelefone] = useState('');
-    const [confirmarSenha, setConfirmarSenha] = useState('');
+    function alterarNome(e) {
+        setNome(e.target.value)
+    }
 
-    async function realizarCadastro() {
-        // Validações
-        if (!nome) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Nome!' });
-            return;
-        }
-        if (!cpf) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo CPF!' });
-            return;
-        }
-        if (!senha) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Senha!' });
-            return;
-        }
-        if (!email) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Email!' });
-            return;
-        }
-        if (!telefone) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Telefone!' });
-            return;
-        }
-        if (!confirmarSenha) {
-            setMensagem({ tipo: 'erro', texto: 'Preencha o campo Confirmar senha!' });
-            return;
+    function alterarCPF(e) {
+        let valor = e.currentTarget.value
+        valor = valor.replace(/\D/g, '')
+
+        setCpf(valor)
+    }
+
+    function alterarTelefone(e) {
+        let valor = e.currentTarget.value
+        valor = valor.replace(/\D/g, '')
+        setTelefone(valor)
+    }
+
+    function alterarEmail(e) {
+        setEmail(e.currentTarget.value)
+    }
+
+    function alterarSenha(e) {
+        setSenha(e.target.value)
+    }
+
+    function alterarConfirmarSenha(e) {
+        setConfirmarSenha(e.target.value)
+    }
+
+
+
+    async function criarAdm() {
+        const form = new FormData();
+        form.append('nome', nome)
+        form.append('cpf_cnpj', cpf)
+        form.append('telefone', telefone)
+        form.append('email', email)
+        form.append('senha', senha)
+        form.append('confirmar_senha', confirmarSenha)
+        form.append('tipo', 0)
+
+        let retorno = await fetch('http://192.168.18.157:5000/criar_usuarios', {
+            method: 'POST',
+            credentials: 'include',
+            body: form
+        })
+
+        retorno = await retorno.json();
+
+
+        if (retorno.message) {
+            navigate('/login')
         }
 
-        if (senha !== confirmarSenha) {
-            setMensagem({ tipo: 'erro', texto: 'Senhas não conferem!' });
-            return;
-        }
-
-        if (cpf.length !== 11) {
-            setMensagem({ tipo: 'erro', texto: 'CPF deve ter 11 dígitos!' });
-            return;
-        }
-
-        if (senha.length < 8) {
-            setMensagem({ tipo: 'erro', texto: 'A senha deve ter pelo menos 8 caracteres!' });
-            return;
-        }
-
-        setLoading(true);
-        setMensagem({ tipo: '', texto: '' });
-
-        try {
-            const retorno = await fetch(`${API_URL}/criar_usuarios`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nome: nome,
-                    cpf_cnpj: cpf,
-                    senha: senha,
-                    confirmar_senha: confirmarSenha,
-                    telefone: telefone,
-                    email: email,
-                    tipo: 0
-                })
-            });
-
-            const data = await retorno.json();
-
-            if (retorno.ok) {
-                localStorage.setItem('emailConfirmacao', email);
-                setMensagem({ tipo: 'sucesso', texto: 'Cadastro realizado com sucesso!' });
-                setTimeout(() => {
-                    navigate('/confirmarEmail');
-                }, 2000);
-            } else {
-                setMensagem({ tipo: 'erro', texto: data.error || data.mensagem || 'Erro ao realizar cadastro!' });
-            }
-        } catch (error) {
-            console.error('Erro:', error);
-            setMensagem({ tipo: 'erro', texto: 'Erro de conexão com o servidor!' });
-        } finally {
-            setLoading(false);
+        else {
+            setError(retorno.error)
         }
     }
 
     return (
         <section className={css.secao}>
-            <Mensagem
-                tipo={mensagem.tipo}
-                texto={mensagem.texto}
-                onClose={() => setMensagem({ tipo: '', texto: '' })}
-            />
-
+            <div>
+                <Mensagem tipo={"erro"} texto={error} />
+            </div>
             <div className={css.organizar}>
                 <Titulo titulo={'Cadastro de Administrador'} cor={'azul-claro'} />
             </div>
@@ -122,7 +92,7 @@ export default function CadastroAdm1() {
                         placeholder={'Digite seu nome'}
                         required={true}
                         input={nome}
-                        alterarInput={(e) => setNome(e.target.value)}
+                        alterarInput={alterarNome}
                     />
                     <Input
                         label={'CPF'}
@@ -130,9 +100,8 @@ export default function CadastroAdm1() {
                         placeholder={'Digite seu CPF'}
                         required={true}
                         maxLength={11}
-                        soNumeros={true}
                         input={cpf}
-                        alterarInput={(e) => setCpf(e.target.value)}
+                        alterarInput={alterarCPF}
                     />
                     <Input
                         label={'Senha'}
@@ -140,18 +109,19 @@ export default function CadastroAdm1() {
                         placeholder={'Digite sua senha'}
                         required={true}
                         input={senha}
-                        alterarInput={(e) => setSenha(e.target.value)}
+                        alterarInput={alterarSenha}
                     />
                 </div>
 
                 <div>
                     <Input
                         label={'Email'}
-                        type={'email'}
+                        type={'text'}
                         placeholder={'Digite seu email'}
                         required={true}
                         input={email}
-                        alterarInput={(e) => setEmail(e.target.value)}
+                        alterarInput={alterarEmail}
+
                     />
                     <Input
                         label={'Telefone'}
@@ -159,9 +129,8 @@ export default function CadastroAdm1() {
                         placeholder={'Digite seu telefone'}
                         required={true}
                         maxLength={11}
-                        soNumeros={true}
                         input={telefone}
-                        alterarInput={(e) => setTelefone(e.target.value)}
+                        alterarInput={alterarTelefone}
                     />
                     <Input
                         label={'Confirmar senha'}
@@ -169,17 +138,13 @@ export default function CadastroAdm1() {
                         placeholder={'Confirme sua senha'}
                         required={true}
                         input={confirmarSenha}
-                        alterarInput={(e) => setConfirmarSenha(e.target.value)}
+                        alterarInput={alterarConfirmarSenha}
                     />
                 </div>
             </div>
 
             <div className={css.botao}>
-                <Botao
-                    texto={loading ? 'Cadastrando...' : 'Cadastrar'}
-                    cor={'rosa'}
-                    acao={realizarCadastro}
-                />
+                <Botao acao={criarAdm} texto={'Cadastrar'} cor={'rosa'} />
             </div>
         </section>
     );
