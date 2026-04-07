@@ -9,16 +9,21 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 
 export default function EsqueciSenha() {
     const [email, setEmail] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const [message, setMessage] = useState('')
+    const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarEmail(e) {
         setEmail(e.target.value)
     }
 
     async function esqueciSenha() {
-        let retorno = await fetch('http://10.92.3.127:5000/esqueci_senha/' + id, {
+        let retorno = await fetch('http://10.92.3.125:5000/esqueci_senha', {
         method: 'POST',
             headers: {
             'Content-Type': 'application/json',
@@ -33,6 +38,7 @@ export default function EsqueciSenha() {
 
     if (retorno.message) {
         navigate('/verificarCodigo')
+        localStorage.setItem('sucesso', retorno.message)
     }
 
     else {
@@ -44,7 +50,8 @@ export default function EsqueciSenha() {
 return (
     <div className={"container-fluid" + css.secao}>
         <div>
-            <Mensagem tipo={"erro"} texto={error} />
+            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+            <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
         </div>
         <div className="row">
             <div className={"col-md-7 " + css.padding}>
@@ -66,7 +73,7 @@ return (
                         <div className={"d-flex align-items-end justify-content-center gap-5 "}>
                             <Botao acao={esqueciSenha} cor={'amarelo'} texto={'Enviar e-mail'} />
 
-                            <Botao cor={'vazadoamarelo'} texto={'Voltar ao login'} />
+                            <Botao cor={'vazadoamarelo'} texto={'Voltar ao login'} pagina={'/login'}/>
                         </div>
 
 

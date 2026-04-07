@@ -9,8 +9,13 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 export default function Login1() {
     const [cpf, setCpf] = useState('')
     const [senha, setSenha] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
+
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarCPF(e) {
         let valor = e.currentTarget.value
@@ -24,7 +29,7 @@ export default function Login1() {
     }
 
     async function realizarLogin() {
-        let retorno = await fetch('http://192.168.18.157:5000/login', {
+        let retorno = await fetch('http://10.92.3.125:5000/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -44,12 +49,20 @@ export default function Login1() {
 
             // SALVA NO BANCO DO JS
             localStorage.setItem('token', retorno.token);
-            localStorage.setItem('nome', retorno.nome)
+            localStorage.setItem('nome', retorno.nome);
+            localStorage.setItem('sucesso', retorno.message);
 
             navigate('/dashboard')
 
 
-        } else {
+        } else if (retorno.error === "Verifique o e-mail antes de logar!") {
+            setError('E-mail não confirmado! Redirecionando para confirmação...');
+            setTimeout(() => {
+                navigate('/ConfirmarEmail');
+            }, 5000);
+        }
+
+        else {
             setError(retorno.error)
         }
     }
@@ -58,7 +71,8 @@ export default function Login1() {
     return (
         <div className={"container-fluid " + css.secao}>
             <div>
-                <Mensagem tipo={"erro"} texto={error} />
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+                <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className="row g-0">
                 <div className={"col-md-6 col-md-6 " + css.colunaFormulario}>

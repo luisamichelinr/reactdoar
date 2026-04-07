@@ -13,8 +13,13 @@ export default function CadastroAdm1() {
     const [email, setEmail] = useState('')
     const [senha, setSenha] = useState('')
     const [confirmarSenha, setConfirmarSenha] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
+
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarNome(e) {
         setNome(e.target.value)
@@ -57,7 +62,7 @@ export default function CadastroAdm1() {
         form.append('confirmar_senha', confirmarSenha)
         form.append('tipo', 0)
 
-        let retorno = await fetch('http://192.168.18.157:5000/criar_usuarios', {
+        let retorno = await fetch('http://10.92.3.125:5000/criar_usuarios', {
             method: 'POST',
             credentials: 'include',
             body: form
@@ -67,7 +72,8 @@ export default function CadastroAdm1() {
 
 
         if (retorno.message) {
-            navigate('/login')
+            navigate('/ConfirmarEmail')
+            localStorage.setItem('sucesso', retorno.message)
         }
 
         else {
@@ -78,7 +84,8 @@ export default function CadastroAdm1() {
     return (
         <section className={css.secao}>
             <div>
-                <Mensagem tipo={"erro"} texto={error} />
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+                <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.organizar}>
                 <Titulo titulo={'Cadastro de Administrador'} cor={'azul-claro'} />

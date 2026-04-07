@@ -9,9 +9,18 @@ import Mensagem from "../Mensagem/Mensagem.jsx";
 export default function RedefinirSenha1() {
     const [senha, setSenha] = useState('')
     const [confirmarSenha, setConfirmarSenha] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
     const id = localStorage.getItem("id");
+
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
+
+    if (id) {
+        localStorage.removeItem('id');
+    }
 
 
     function alterarSenha(e) {
@@ -28,7 +37,7 @@ export default function RedefinirSenha1() {
         form.append('confirmar_senha', confirmarSenha);
         form.append('token', localStorage.getItem("token"));
 
-        let retorno = await fetch('http://10.92.3.127:5000/editar_usuarios/' + id, {
+        let retorno = await fetch('http://10.92.3.125:5000/editar_usuarios/' + id, {
         method: 'PUT',
             credentials: 'include',
             body: form
@@ -37,7 +46,19 @@ export default function RedefinirSenha1() {
     retorno = await retorno.json();
 
     if (retorno.message) {
-        navigate('/login')
+            const token = localStorage.getItem('token');
+            await fetch('http://10.92.3.125:5000/logout', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ token })
+            });
+
+            localStorage.removeItem("token");
+            localStorage.removeItem("nome");
+
+            navigate("/login");
     }
 
     else {
@@ -48,7 +69,8 @@ export default function RedefinirSenha1() {
 return (
     <div className={"container-fluid " + css.secao}>
         <div>
-            <Mensagem tipo={"erro"} texto={error} />
+            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+            <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
         </div>
         <div className="row g-0">
             <div className={"col-md-6 col-md-6 " + css.colunaFormulario}>

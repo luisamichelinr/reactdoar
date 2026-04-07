@@ -7,7 +7,7 @@ export default function Mensagem({ tipo, texto, onClose }) {
         if (texto) {
             const timer = setTimeout(() => {
                 onClose();
-            }, 4000);
+            }, 2000);
             return () => clearTimeout(timer);
         }
     }, [texto, onClose]);

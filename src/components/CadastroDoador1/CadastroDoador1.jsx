@@ -15,8 +15,13 @@ export default function CadastroDoador1() {
     const [senha, setSenha] = useState('')
     const [confirmarSenha, setConfirmarSenha] = useState('')
     const [fotoPerfil, setFotoPerfil] = useState('')
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
+
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarNome(e) {
         setNome(e.target.value)
@@ -63,7 +68,7 @@ export default function CadastroDoador1() {
         form.append('confirmar_senha', confirmarSenha)
         form.append('foto_perfil', fotoPerfil)
 
-        let retorno = await fetch('http://192.168.18.157:5000/criar_usuarios', {
+        let retorno = await fetch('http://10.92.3.125:5000/criar_usuarios', {
             method: 'POST',
             credentials: 'include',
             body: form
@@ -73,7 +78,8 @@ export default function CadastroDoador1() {
 
 
         if (retorno.message) {
-            navigate('/login')
+            localStorage.setItem('sucesso', retorno.message)
+            navigate('/ConfirmarEmail')
         }
 
         else {
@@ -86,7 +92,8 @@ export default function CadastroDoador1() {
     return (
         <section className={css.containerSection}>
             <div>
-                <Mensagem tipo={"erro"} texto={error} />
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+                <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.organizar}>
                 <Titulo titulo={'Venha fazer parte da mudança!'} cor={'rosa'} />
