@@ -6,6 +6,7 @@ import Botao from "../Botao/Botao.jsx";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Mensagem from "../Mensagem/Mensagem.jsx";
+import InputArquivo from "../InputArquivo/InputArquivo.jsx";
 
 export default function CadastroDoador1() {
     const [nome, setNome] = useState('')
@@ -19,7 +20,9 @@ export default function CadastroDoador1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarNome(e) {
         setNome(e.target.value)
@@ -90,10 +93,7 @@ export default function CadastroDoador1() {
     return (
         <section className={css.containerSection}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
-                    localStorage.removeItem('sucesso');
-                    setError('')
-                }}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.organizar}>
@@ -153,12 +153,9 @@ export default function CadastroDoador1() {
                             input={confirmarSenha}
                             alterarInput={alterarConfirmarSenha}
                         />
-                        <Input
-                            label={'Foto de perfil'}
-                            type={'file'}
-                            tamanho={'Big'}
-                            required={true}
-                            alterarInput={alterarFotoPerfil}
+                        <InputArquivo
+                        tamanho={'big'}
+                        required={false}
                         />
                     </div>
                 </div>

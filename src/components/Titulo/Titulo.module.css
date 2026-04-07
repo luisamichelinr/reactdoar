@@ -2,18 +2,21 @@
     color: #167CBF;
     font-weight: 800;
     font-size: 3rem;
+    text-align: center;
 }
 
 .laranja{
     color: #F69B2F;
     font-weight: 800;
     font-size: 3rem;
+    text-align: center;
 }
 
 .rosa{
     color: #F77CA8;
     font-weight: 800;
     font-size: 3rem;
+    text-align: center;
 }
 
 .texto {
@@ -21,8 +24,8 @@
     font-weight: 800;
     font-size: 1.25rem;
     max-width: 37.5rem;
-    margin-bottom: 4rem;
-
+    /*margin-bottom: 4rem;*/
+    text-align: center;
 }
 
 
@@ -32,27 +35,20 @@
         font-size: 2.5rem;
         margin-left: 2rem;
         margin-top: 1rem;
-        text-align: start;
+        text-align: center;
     }
+
 }
 
-@media (max-width: 376px) {
-    .azul-claro, .laranja, .rosa {
-        color: #ffffff;
-        font-size: 2.5rem;
-        margin-left: 2rem;
-        margin-top: 1rem;
-        text-align: start;
-    }
-}
 
 @media (max-width: 426px) {
     .azul-claro, .laranja, .rosa {
         color: #ffffff;
-        font-size: 2.5rem;
-        margin-left: 2rem;
+        font-size: 2rem;
+        /*margin-left: 1.2rem;*/
         margin-top: 1rem;
-        text-align: start;
+        text-align: center;
+        margin-left: 0;
     }
 }
 @media (max-width: 769px) {
@@ -60,7 +56,7 @@
         font-size: 2.5rem;
         /*margin-left: 2rem;*/
         /*margin-top: 1rem;*/
-        text-align: start;
+        text-align: center;
 
     }
 }

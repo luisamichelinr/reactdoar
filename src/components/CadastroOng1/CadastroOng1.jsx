@@ -7,6 +7,7 @@ import Select from "../Select/Select.jsx";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Mensagem from "../Mensagem/Mensagem.jsx";
+import InputArquivo from "../InputArquivo/InputArquivo.jsx";
 
 export default function CadastroOng1() {
     const [nome, setNome] = useState('')
@@ -28,6 +29,9 @@ export default function CadastroOng1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarNome(e) {
         setNome(e.target.value)
@@ -145,10 +149,7 @@ export default function CadastroOng1() {
     return(
         <section className={css.containerSection}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
-                    localStorage.removeItem('sucesso');
-                    setError('');
-                }}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.cadastroOng1}>
@@ -248,7 +249,7 @@ export default function CadastroOng1() {
                             required={true}
                             minLength={50}
                             maxLength={200}
-                            input={descLonga}
+                            textarea={true}
                             alterarInput={alterarDescLonga}
                         />
                         <Input
@@ -268,12 +269,9 @@ export default function CadastroOng1() {
                             input={numAgencia}
                             alterarInput={alterarNumAgencia}
                         />
-                        <Input
-                            label={'Foto de perfil'}
-                            type={'file'}
-                            required={true}
-                            tamanho={'Big'}
-                            alterarInput={alterarFotoPerfil}
+                        <InputArquivo
+                         tamanho={'big'}
+                         required={false}
                         />
                     </div>
                 </div>

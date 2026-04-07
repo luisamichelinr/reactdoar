@@ -30,10 +30,13 @@
     height: 9.4rem;
     background-color: white;
     box-sizing: border-box;
-    padding: 0.2rem 1rem;
+    padding: 0.8rem 1rem;
+    resize: none;
+    outline: none;
+    vertical-align: top;
+    display: block;
+    line-height: 1.4;
 }
-
-
 
 
 @media (max-width: 426px) {
@@ -49,7 +52,7 @@
         border: none;
         border-radius: 1rem;
         margin-bottom: 0.8rem;
-        width: 24rem;
+        width: 23rem;
     }
 
     .Big {
@@ -68,7 +71,7 @@
         border: none;
         border-radius: 1rem;
         margin-bottom: 0.8rem;
-        width: 21rem;
+        width: 19rem;
     }
 
 }
@@ -80,6 +83,6 @@
         border: none;
         border-radius: 1rem;
         margin-bottom: 0.8rem;
-        width: 16rem;
+        width: 18rem;
     }
 }

@@ -35,6 +35,20 @@
     transform: scale(1.02);
 }
 
+.vermelho {
+    background-color: red;
+    border: 2px solid darkred;
+    border-radius: 2rem;
+    width: 15rem;
+    padding: 0.7rem;
+    color: white;
+    font-family: 'Inter', Arial;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
 .vazadoamarelo {
     background-color: transparent;
     border: 2px solid #F69B2F;

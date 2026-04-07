@@ -1,3 +1,4 @@
+
 .containerSection {
     width: 100%;
     min-height: 100vh;
@@ -17,13 +18,13 @@
 }
 
 .formulario {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 5rem;
-    padding: 0 2rem;
-}
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5rem;
+        padding: 0 2rem;
+    }
 
 .linha {
     display: flex;
@@ -69,6 +70,14 @@
     .containerSection {
         background-color: #F77CA8;
     }
+    .formulario {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5rem;
+        padding: 0 2rem;
+    }
 
     .organizar {
         margin-top: 0;
@@ -97,5 +106,15 @@
 
     .botaoContainer {
         margin-top: 1rem;
+    }
+}
+@media (max-width: 321px) {
+    .formulario {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5rem;
+        padding: 0 1rem;
     }
 }

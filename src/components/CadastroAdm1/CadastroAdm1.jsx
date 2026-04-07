@@ -5,6 +5,7 @@ import css from "./CadastroAdm1.module.css";
 import {useState} from "react";
 import {useNavigate} from "react-router-dom";
 import Mensagem from "../Mensagem/Mensagem.jsx";
+import InputArquivo from "../InputArquivo/InputArquivo.jsx";
 
 export default function CadastroAdm1() {
     const [nome, setNome] = useState('')
@@ -17,8 +18,11 @@ export default function CadastroAdm1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-   
-     function alterarNome(e) {
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
+
+    function alterarNome(e) {
         setNome(e.target.value)
     }
 
@@ -81,10 +85,7 @@ export default function CadastroAdm1() {
     return (
         <section className={css.secao}>
             <div>
-                <Mensagem tipo={'sucesso'} texto={sucesso} onClose={( => {
-                    localStorage.removeItem('sucesso')
-                        setError('')
-                }} />
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
             <div className={css.organizar}>
@@ -102,6 +103,23 @@ export default function CadastroAdm1() {
                         alterarInput={alterarNome}
                     />
                     <Input
+                        label={'Senha'}
+                        type={'password'}
+                        placeholder={'Digite sua senha'}
+                        required={true}
+                        input={senha}
+                        alterarInput={alterarSenha}
+                    />
+                    <Input
+                        label={'Telefone'}
+                        type={'text'}
+                        placeholder={'Digite seu telefone'}
+                        required={true}
+                        maxLength={11}
+                        input={telefone}
+                        alterarInput={alterarTelefone}
+                    />
+                    <Input
                         label={'CPF'}
                         type={'text'}
                         placeholder={'Digite seu CPF'}
@@ -110,14 +128,7 @@ export default function CadastroAdm1() {
                         input={cpf}
                         alterarInput={alterarCPF}
                     />
-                    <Input
-                        label={'Senha'}
-                        type={'password'}
-                        placeholder={'Digite sua senha'}
-                        required={true}
-                        input={senha}
-                        alterarInput={alterarSenha}
-                    />
+
                 </div>
 
                 <div>
@@ -130,15 +141,7 @@ export default function CadastroAdm1() {
                         alterarInput={alterarEmail}
 
                     />
-                    <Input
-                        label={'Telefone'}
-                        type={'text'}
-                        placeholder={'Digite seu telefone'}
-                        required={true}
-                        maxLength={11}
-                        input={telefone}
-                        alterarInput={alterarTelefone}
-                    />
+
                     <Input
                         label={'Confirmar senha'}
                         type={'password'}
@@ -147,6 +150,12 @@ export default function CadastroAdm1() {
                         input={confirmarSenha}
                         alterarInput={alterarConfirmarSenha}
                     />
+
+                    <InputArquivo
+                        tamanho={'big'}
+                        required={false}
+                    />
+
                 </div>
             </div>
 

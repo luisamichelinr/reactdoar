@@ -15,7 +15,7 @@
 
 .conteudoFormulario {
     width: 40rem;
-    height: 45rem;
+    height: 37rem;
     max-width: 50rem;
     padding: 3rem 2.5rem;
     display: flex;
@@ -48,12 +48,17 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    margin-top: 2rem;
-    flex-wrap: wrap;
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
+    margin-top: 0.8rem;
 
+}
+
+.cadastro {
+    width: 100%;
+    margin-top: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
 }
 
 .p {
@@ -128,7 +133,7 @@
 
     .conteudoFormulario {
         max-width: 100%;
-        padding: 3rem 1.2rem 3rem;
+        padding: 0px 2rem;
         align-items: flex-start;
     }
 
@@ -146,7 +151,6 @@
 
     .areaBotao {
         margin-top: 1.2rem;
-
     }
 
     .areaBotao button {
@@ -184,7 +188,7 @@
 
 @media (max-width: 321px) {
     .conteudoFormulario {
-        padding: 2.3rem 1rem 2.5rem;
+        padding: 0px 1rem;
     }
 
     .formulario {

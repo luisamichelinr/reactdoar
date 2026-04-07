@@ -21,7 +21,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 5rem;
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 .linha {
@@ -79,8 +79,8 @@
 
     .formulario {
         background-color: #F69B2F;
-        padding-bottom: 1rem;
         margin: 0;
+        padding: 0 2rem;
     }
 
     .linha {
@@ -97,5 +97,15 @@
 
     .botaoContainer {
         margin-top: 1rem;
+    }
+}
+@media (max-width: 321px) {
+    .formulario {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 5rem;
+        padding: 0 1rem;
     }
 }

@@ -15,7 +15,9 @@ export default function ConfirmarEmail1() {
     const sucesso = localStorage.getItem('sucesso');
     const navigate = useNavigate();
 
-    
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     function alterarCodigo(e) {
         let valor = e.currentTarget.value
@@ -49,24 +51,20 @@ export default function ConfirmarEmail1() {
     return (
         <div className={"container-fluid " + css.secao}>
             <div>
-                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => {
-                    localStorage.removeItem('sucesso');
-                    setError('');
-                }}/>
+                <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
                 <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
             </div>
 
             <div className="row">
-                <div className={"col-md-7 " + css.padding}>
-                    <>
+                <div className={"col-md-6 " + css.colunaFormulario}>
+                    <div className={css.conteudoFormulario}>
                             <Titulo
                                 titulo={'Digite o código de confirmação'}
                                 cor={'azul-claro'}
                                 texto={`Enviamos um código de 6 dígitos para o e-mail cadastrado`}
                             />
-                            <div className={"d-flex flex-column align-items-start justify-content-center gap-5"}>
-                                <div className={"d-flex flex-column align-items-center justify-content-center gap-4"}>
-                                    <div className={"d-flex flex-column align-items-start justify-content-center gap-3 " + css.width}>
+                        <form className={css.formulario}>
+                            <div className={css.campo}>
                                         <Input
                                             label={"Código de confirmação"}
                                             type={"text"}
@@ -76,9 +74,8 @@ export default function ConfirmarEmail1() {
                                             input={codigo}
                                             alterarInput={alterarCodigo}
                                         />
-                                    </div>
-
-                                    <div className={"d-flex align-items-end justify-content-center gap-5"}>
+                            </div>
+                            <div className={"d-flex align-items-end justify-content-center gap-5 " + css.areaBotao}>
                                         <Botao
                                             cor={'amarelo'}
                                             texto={'Confirmar e-mail'}
@@ -89,12 +86,11 @@ export default function ConfirmarEmail1() {
                                             texto={'Voltar'}
                                             pagina={'/login'}
                                         />
-                                    </div>
-                                </div>
                             </div>
-                        </>
+                        </form>
+                    </div>
                 </div>
-                <div className={"col-5 d-flex justify-content-end"}>
+                <div className={"col-md-6 " + css.colunaImagem}>
                     <img className={css.imagem} src='/cachorro_macaco.png' alt="Cachorro com um macaco de pelúcia"/>
                 </div>
             </div>

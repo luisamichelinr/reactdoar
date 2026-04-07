@@ -75,9 +75,10 @@ export default function VerificarCodigoSenha1() {
                             </div>
 
                         </form>
-                        <div className={css.areaBotao}>
-                            <Botao cor={'amarelo'} texto={'Mudar e-mail'} />
+                        <div className={"d-flex align-items-end justify-content-center gap-5 " + css.areaBotao}>
                             <Botao acao={verificarCodigoSenha} cor={'amarelo'} texto={'Verificar código'} />
+                            <Botao pagina={"/esquecisenha"} cor={'vazadoamarelo'} texto={'Mudar e-mail'} />
+
                         </div>
                     </div>
                 </div>

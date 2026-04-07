@@ -14,7 +14,9 @@ export default function RedefinirSenha1() {
     const navigate = useNavigate();
     const id = localStorage.getItem("id");
 
-   
+    if (sucesso) {
+        localStorage.removeItem('sucesso');
+    }
 
     if (id) {
         localStorage.removeItem('id');
@@ -55,10 +57,8 @@ export default function RedefinirSenha1() {
 
             localStorage.removeItem("token");
             localStorage.removeItem("nome");
-            localStorage.removeItem('id');
 
-            localStorage.setItem('sucesso', 'Senha alterada com sucesso! Faça login novamente.');
-                navigate('/login');
+            navigate("/login");
     }
 
     else {
@@ -69,8 +69,8 @@ export default function RedefinirSenha1() {
 return (
     <div className={"container-fluid " + css.secao}>
         <div>
-            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={fecharMensagemSucesso}/>
-            <Mensagem tipo={"erro"} texto={error} onClose={fecharMensagemErro}/>
+            <Mensagem tipo={"sucesso"} texto={sucesso} onClose={() => setError('')}/>
+            <Mensagem tipo={"erro"} texto={error} onClose={() => setError('')}/>
         </div>
         <div className="row g-0">
             <div className={"col-md-6 col-md-6 " + css.colunaFormulario}>
